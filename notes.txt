@@ -1,0 +1,54 @@
+verlet integration:
+x(t+dt)=x(t)+v(t)dt+0.5a(t)dt^2+...          (1)
+x(t-dt)=x(t)-v(t)dt+0.5a(t)dt^2-...          (2)
+x(t+dt)+x(t-dt)=2x(t)+a(t)dt^2+O(dt^4)       (1)+(2)
+solve for x(t+dt)
+x(t+dt)=2x(t)-x(t-dt)+a(t)dt^2+O(dt^4)       (3)
+
+x(t+dt)-x(t-dt)=2v(t)dt+O(dt^3)              (1)-(2)
+solve for v(t)
+v(t)=[x(t+dt)-x(t-dt)]/(2dt)+O(dt^2)         (4)
+
+solve for x(t-dt)
+x(t-dt)=x(t+dt)-2v(t)dt+O(dt^3)              (5)
+
+plug (5) into (3)
+x(t+dt)=x(t)+v(t)dt+0.5a(t)dt^2+O(dt^3)      (6)
+
+t->t+dt in (3)(4)
+and sub in (3) for x(t+2dt) in (4)
+ v(t+dt)
+=[x(t+dt)-x(t)]/dt+0.5a(t+dt)dt+O(dt^2)
+=v(t)+0.5[a(t)+a(t+dt)]dt+O(dt^2)            (7)
+
+
+(3)(4) original verlet
+x(t+dt)=2x(t)-x(t-dt)+a(t)dt^2+O(dt^4)
+v(t)=[x(t+dt)-x(t-dt)]/(2dt)+O(dt^2)
+
+local error:
+    position: O(dt^4)
+    velocity: O(dt^2)
+global error:
+    position: O(dt^2)
+    velocity: O(dt^2)
+
+(6)(7) velocity verlet
+x(t+dt)=x(t)+v(t)dt+0.5a(t)dt^2+O(dt^3) 
+v(t+dt)=v(t)+0.5[a(t)+a(t+dt)]dt+O(dt^2)
+
+local error:
+    position: O(dt^3)
+    velocity: O(dt^3)
+global error:
+    position: O(dt^2)
+    velocity: O(dt^2)
+
+1.update all positions
+2.update all forces
+3.update all velocities
+4.apply boundary conditions
+5.move global time forward by time-step(dt)
+6.calculate any output
+7.repeat step 1-6
+
