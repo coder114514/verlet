@@ -1,36 +1,44 @@
-import math,matplotlib.pyplot as plt
+from math import exp
+import matplotlib.pyplot as plt
 
-n=100
-dt=10/n
-t=0
-oldx=-dt
-x=0
+n = 100
+dt = 10 / n
+t = 0
+oldx = -dt
+x = 0
 
-axis1=[]
-axis2=[]
+axis_x = []
+axis_y = []
 
-vaxis1=[]
-vaxis2=[]
+vaxis_x = []
+vaxis_y = []
 
-eaxis1=[]
-eaxis2=[]
+eaxis_x = []
+eaxis_y = []
+
+epaxis_x = []
+epaxis_y = []
+
 for i in range(n+1):
-    a=x
-    v=x-oldx
-    oldx=x
-    x+=v+a*dt*dt
-    axis2.append(x)
-    axis1.append(t)
-    vaxis2.append(math.exp(t))
-    vaxis1.append(t)
-    eaxis2.append(x-math.exp(t))
-    eaxis1.append(t)
-    print(t,math.exp(t))
-    t+=dt
-    # print(t)
+    a = x
+    v = x - oldx
+    oldx = x
+    x += v + a*dt*dt
+    axis_y.append(x)
+    axis_x.append(t)
+    vaxis_y.append(exp(t))
+    vaxis_x.append(t)
+    eaxis_y.append(x - exp(t))
+    eaxis_x.append(t)
+    epaxis_y.append(abs(x-exp(t)) / exp(t) * 100)
+    epaxis_x.append(t)
+    t += dt # t == i*dt
 
-plt.plot(axis1,axis2,label="approximation")
-plt.plot(vaxis1,vaxis2,label="exact")
-plt.plot(eaxis1,eaxis2,label="error")
+print("error: " + str(epaxis_y[-1]) + "%")
+
+plt.plot(axis_x, axis_y, label="verlet")
+plt.plot(vaxis_x, vaxis_y, label="exact")
+plt.plot(eaxis_x, eaxis_y, label="error")
+plt.plot(epaxis_x, epaxis_y, label="error %")
 plt.legend()
 plt.show()
