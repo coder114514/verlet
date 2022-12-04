@@ -1,8 +1,8 @@
 from math import exp
 import matplotlib.pyplot as plt
 
-n = 100
-dt = 10 / n
+n = 1000
+dt = 100 / n
 t = 0
 oldx = -dt
 x = 0
@@ -36,9 +36,9 @@ for i in range(n+1):
 
 print("error: " + str(epaxis_y[-1]) + "%")
 
-plt.plot(axis_x, axis_y, label="verlet")
-plt.plot(vaxis_x, vaxis_y, label="exact")
-plt.plot(eaxis_x, eaxis_y, label="error")
+#plt.plot(axis_x, axis_y, label="verlet")
+#plt.plot(vaxis_x, vaxis_y, label="exact")
+#plt.plot(eaxis_x, eaxis_y, label="error")
 plt.plot(epaxis_x, epaxis_y, label="error %")
 plt.legend()
 plt.show()
