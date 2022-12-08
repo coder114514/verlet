@@ -1,3 +1,3 @@
 # verlet
 
-random code for verlet integration
+verlet integration
