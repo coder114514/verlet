@@ -1,44 +1,57 @@
 from math import exp
 import matplotlib.pyplot as plt
 
-n = 1000
+#equation: a = x, v(0) = 1, x(0) = 1
+#exact solution: x = exp(t)
+
+n = 100000
 dt = 100 / n
-t = 0
-oldx = -dt
-x = 0
 
-axis_x = []
-axis_y = []
-
-vaxis_x = []
-vaxis_y = []
-
-eaxis_x = []
-eaxis_y = []
-
-epaxis_x = []
-epaxis_y = []
+axis_t = []
+axis_exact = []
 
 for i in range(n+1):
-    a = x
-    v = x - oldx
-    oldx = x
-    x += v + a*dt*dt
-    axis_y.append(x)
-    axis_x.append(t)
-    vaxis_y.append(exp(t))
-    vaxis_x.append(t)
-    eaxis_y.append(x - exp(t))
-    eaxis_x.append(t)
-    epaxis_y.append(abs(x-exp(t)) / exp(t) * 100)
-    epaxis_x.append(t)
-    t += dt # t == i*dt
+    axis_t.append(i*dt)
+    axis_exact.append(exp(i*dt))
 
-print("error: " + str(epaxis_y[-1]) + "%")
+def euler():
+    x = 1
+    v = 1
+    xa = []
+    ea = []
+    for t in axis_t:
+        xa.append(x)
+        ea.append((x-exp(t))/exp(t)*100)
+        a = x
+        x += v * dt
+        v += a * dt
+    return xa,ea
 
-#plt.plot(axis_x, axis_y, label="verlet")
-#plt.plot(vaxis_x, vaxis_y, label="exact")
-#plt.plot(eaxis_x, eaxis_y, label="error")
-plt.plot(epaxis_x, epaxis_y, label="error %")
+def verlet():
+    oldx = 1 - dt
+    x = 1
+    xa = []
+    ea = []
+    for t in axis_t:
+        xa.append(x)
+        ea.append((x-exp(t))/exp(t)*100)
+        a = x
+        v = x - oldx
+        oldx = x
+        x += v + a*dt*dt
+    return xa,ea
+
+axis_euler,axis_euler_error = euler()
+axis_verlet,axis_verlet_error = verlet()
+
+print("euler error: " + str(axis_euler_error[-1]) + "%")
+print("verlet error: " + str(axis_verlet_error[-1]) + "%")
+
+#plt.plot(axis_t, axis_exact, label="exact")
+#plt.plot(axis_t, axis_euler, label="euler")
+#plt.plot(axis_t, axis_verlet, label="verlet")
+plt.plot(axis_t, axis_euler_error, label="euler error")
+plt.plot(axis_t, axis_verlet_error, label="verlet error")
 plt.legend()
 plt.show()
+
