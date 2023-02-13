@@ -1,6 +1,10 @@
 # verlet
 
-verlet integration
+some simple physics simulation using verlet integration (in python)
+
+## dependency
+
+pygame
 
 ## derivation
 ### regular verlet integration
