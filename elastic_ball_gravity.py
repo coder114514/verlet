@@ -97,16 +97,19 @@ def render():
         obj.render()
 
 objs=[]
-nsub=10
+nsub=20
 dt=0.1/nsub
 G=1000
 
-# objs.append(Ball(10,100,Vec2(600,360),Vec2(10,0),(255,255,255)))
-# objs.append(Ball(10,100,Vec2(680,360),Vec2(-10,0),(255,255,255)))
+#objs.append(Ball(10,100,Vec2(640,320),Vec2(20,0),(255,255,255)))
+#objs.append(Ball(10,100,Vec2(640,400),Vec2(-20,0),(255,255,255)))
 
 Elast = 0
-Eclock = time.time()
+Eclock_d = time.time()
 delta_E = 0
+
+displayE = 0
+Eclock = time.time()
 
 while True:
     for event in pygame.event.get():
@@ -115,7 +118,7 @@ while True:
             sys.exit()
         elif event.type==MOUSEBUTTONDOWN:
             pos=pygame.mouse.get_pos()
-            color=(random.randint(0,255),random.randint(0,255),random.randint(0,255))
+            color=(random.randint(20,255),random.randint(20,255),random.randint(20,255))
             v=Vec2(10*(random.random()-0.5),10*(random.random()-0.5))
             objs.append(Ball(10,random.randint(100,500),Vec2(pos[0],pos[1]),v,color))
     for i in range(nsub):
@@ -129,13 +132,15 @@ while True:
             if obj1==obj2:continue
             r=obj2.p-obj1.p
             d=r.len()
-            E-=G*obj1.m*obj2.m/d
-    if  time.time() - Eclock >= 0.5:
-        Eclock =  time.time()
+            E+=G*obj1.m*obj2.m/20-G*obj1.m*obj2.m/d
+    if  time.time() - Eclock_d >= 0.5:
+        Eclock_d =  time.time()
         delta_E = E - Elast
         Elast = E
-    E = round(E,2)
-    text_surface = my_font.render('Total Energy: '+str(E), True, (255, 255, 255))
+    if time.time() - Eclock >= 0.1:
+        Eclock = time.time()
+        displayE = round(E,2)
+    text_surface = my_font.render('Total Energy: '+str(displayE), True, (255, 255, 255))
     win.blit(text_surface, (0,0))
     text_surface = my_font.render('ΔE: '+str(round(delta_E,2)), True, (255, 255, 255))
     win.blit(text_surface, (0,20))
