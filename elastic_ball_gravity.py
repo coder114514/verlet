@@ -1,4 +1,4 @@
-import pygame,sys,math,random
+import pygame,sys,math,random,time
 from pygame.locals import *
 
 pygame.init()
@@ -6,7 +6,7 @@ fpsClock=pygame.time.Clock()
 win=pygame.display.set_mode((1280,720))
 
 pygame.font.init()
-my_font = pygame.font.SysFont('Comic Sans MS', 30)
+my_font = pygame.font.SysFont('Comic Sans MS', 20)
 
 class Vec2:
     def __init__(self,x,y):
@@ -104,6 +104,10 @@ G=1000
 # objs.append(Ball(10,100,Vec2(600,360),Vec2(10,0),(255,255,255)))
 # objs.append(Ball(10,100,Vec2(680,360),Vec2(-10,0),(255,255,255)))
 
+Elast = 0
+Eclock = time.time()
+delta_E = 0
+
 while True:
     for event in pygame.event.get():
         if event.type==QUIT:
@@ -117,6 +121,24 @@ while True:
     for i in range(nsub):
         update(dt)
     render()
+    E = 0
+    for obj in objs:
+        E += 0.5 * obj.m * (obj.v.x*obj.v.x+obj.v.y*obj.v.y)
+    for obj1 in objs:
+        for obj2 in objs:
+            if obj1==obj2:continue
+            r=obj2.p-obj1.p
+            d=r.len()
+            E-=G*obj1.m*obj2.m/d
+    if  time.time() - Eclock >= 0.5:
+        Eclock =  time.time()
+        delta_E = E - Elast
+        Elast = E
+    E = round(E,2)
+    text_surface = my_font.render('Total Energy: '+str(E), True, (255, 255, 255))
+    win.blit(text_surface, (0,0))
+    text_surface = my_font.render('ΔE: '+str(round(delta_E,2)), True, (255, 255, 255))
+    win.blit(text_surface, (0,20))
     pygame.display.flip()
     fpsClock.tick(60)
     
