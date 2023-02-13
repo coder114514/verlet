@@ -6,7 +6,7 @@ fpsClock=pygame.time.Clock()
 win=pygame.display.set_mode((1280,720))
 
 pygame.font.init()
-my_font = pygame.font.SysFont('Comic Sans MS', 30)
+my_font = pygame.font.SysFont('Comic Sans MS', 20)
 
 class Vec2:
     def __init__(self,x,y):
@@ -53,7 +53,7 @@ class Ball:
 def applyCentral():
     center=Vec2(1280/2,720/2)
     for obj in objs:
-        obj.a+=G*(center-obj.p)
+        obj.a+=G*(center-obj.p)/obj.m
 
 def solveCollision():
     for i in range(len(objs)):
@@ -93,7 +93,7 @@ def render():
 objs=[]
 nsub=10
 dt=0.1/nsub
-G=0.5
+G=10
 
 # objs.append(Ball(10,100,Vec2(600,360),Vec2(10,0),(255,255,255)))
 # objs.append(Ball(10,100,Vec2(680,360),Vec2(-10,0),(255,255,255)))
@@ -107,11 +107,19 @@ while True:
             pos=pygame.mouse.get_pos()
             for i in range(1):
                 v=Vec2(200*(random.random()-0.5),200*(random.random()-0.5))
-                color=(random.randint(0,255),random.randint(0,255),random.randint(0,255))
-                objs.append(Ball(10,100,Vec2(pos[0],pos[1]),v,color))
+                color=(random.randint(20,255),random.randint(20,255),random.randint(20,255))
+                objs.append(Ball(10,random.randint(50,150),Vec2(pos[0],pos[1]),v,color))
     for i in range(nsub):
         update(dt)
     render()
+    E = 0
+    for obj in objs:
+        E += 0.5 * obj.m * (obj.v.x*obj.v.x+obj.v.y*obj.v.y)
+        center=Vec2(1280/2,720/2)
+        dist=(obj.p-center).len()
+        E += 0.5 * G * dist * dist
+    E = round(E,2)
+    text_surface = my_font.render('Total Energy: '+str(E), True, (255, 255, 255))
+    win.blit(text_surface, (0,0))
     pygame.display.flip()
     fpsClock.tick(60)
-    
