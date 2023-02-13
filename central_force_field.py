@@ -1,4 +1,4 @@
-import pygame,sys,math,random
+import pygame,sys,math,random,time
 from pygame.locals import *
 
 pygame.init()
@@ -98,6 +98,10 @@ G=10
 # objs.append(Ball(10,100,Vec2(600,360),Vec2(10,0),(255,255,255)))
 # objs.append(Ball(10,100,Vec2(680,360),Vec2(-10,0),(255,255,255)))
 
+Elast = 0
+Eclock = time.time()
+delta_E = 0
+
 while True:
     for event in pygame.event.get():
         if event.type==QUIT:
@@ -118,8 +122,14 @@ while True:
         center=Vec2(1280/2,720/2)
         dist=(obj.p-center).len()
         E += 0.5 * G * dist * dist
+    if  time.time() - Eclock >= 0.5:
+        Eclock =  time.time()
+        delta_E = E - Elast
+        Elast = E
     E = round(E,2)
     text_surface = my_font.render('Total Energy: '+str(E), True, (255, 255, 255))
     win.blit(text_surface, (0,0))
+    text_surface = my_font.render('ΔE: '+str(round(delta_E,2)), True, (255, 255, 255))
+    win.blit(text_surface, (0,20))
     pygame.display.flip()
     fpsClock.tick(60)
